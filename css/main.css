@@ -69,7 +69,7 @@ button{
     display: none;
     overflow: hidden;
 }
-#maindiv .plane,#maindiv .bullet{
+#maindiv .plane,#maindiv .bullet,#maindiv .supply{
     position: absolute;
     z-index: 1;
 }
@@ -150,6 +150,9 @@ button{
 .bullet1{
     background: url(../image/bullet.png) no-repeat;
 }
+.bullet2{
+    background: url(../image/bullet2.png) no-repeat;
+}
 .e-bullet1{
     background: url(../image/e-bullet1.png) no-repeat;
 }
@@ -166,19 +169,36 @@ button{
     background: url(../image/e4.png) no-repeat;
 }
 .enemys5{
+    background: url(../image/e5.png) no-repeat;
+}
+.enemys6{
+    background: url(../image/e6.png) no-repeat;
+}
+.enemysboss{
     background: url(../image/boss1.png) no-repeat;
+}
+.supply{
+    border: 1px solid #fff;
+    border-radius: 15px;
+    box-shadow: 1px 0px 20px 0px #fff;
+}
+.bulletspeed{
+    background:#cff9f9  url('../image/bulletspeed.png');
+}
+.twobullets{
+    background:#cff9f9  url('../image/twobullets.png');
 }
 .breathe{
     border-radius: 50%;
     box-shadow:0 1px 2px rgba(0,0,0,.3);
-    -webkit-animation-timing-function:ease-in-out;
-    -webkit-animation-name:breathe;
-    -webkit-animation-duration:500ms;
-    -webkit-animation-iteration-count:infinite;
-    -webkit-animation-direction:alternate;
+    animation-timing-function:ease-in-out;
+    animation-name:breathe;
+    animation-duration:500ms;
+    animation-iteration-count:infinite;
+    animation-direction:alternate;
 }
 /*3秒无敌状态效果*/
-@-webkit-keyframes breathe {
+@keyframes breathe {
     0% {
     opacity:.2;
     box-shadow:0 1px 2px rgba(255,255,255,0.1);
