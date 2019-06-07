@@ -1,0 +1,191 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'Microsoft Yahei';
+}
+body,html{
+    overflow: hidden;
+}
+.fl{
+    float: left;
+}
+.fr{
+    float: right;
+}
+.f16{
+    font-size: 16px;
+}
+.c-green{
+    color: #54ff00;
+}
+.hpbar{
+    height: 5px;
+    border-radius: 3px;
+    display:block;
+    background: red;
+    position: relative;
+    top: -10px;
+    margin: 0 auto;
+    opacity: 0.7;
+}
+.gameTit{
+    padding-top: 150px;
+    color: #a6a7ea;
+    font-size: 40px;
+    text-align: center;
+    text-shadow: 3px 3px 10px #333
+}
+#contentdiv{    
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+#startdiv{
+    width: 100%;
+    background-image: url(../image/startbg.jpg);
+    background-repeat: no-repeat;
+    background-size: auto
+}
+button{
+    outline: none;
+}
+#startdiv button{
+    position: absolute;
+    bottom: 20%;
+    left: 50%;
+    margin-left:-75px;
+    width: 150px;
+    height: 40px;
+    border: 1px solid #fff;
+    border-radius: 30px;
+    color: #fff;
+    background-color: #a6a7ea;
+}
+#maindiv{
+    width: 100%;
+    background-image:url(../image/mission1.jpg);
+    background-repeat: repeat-y;
+    background-size: 100%;
+    display: none;
+    overflow: hidden;
+}
+#maindiv .plane,#maindiv .bullet{
+    position: absolute;
+    z-index: 1;
+}
+#scorediv{
+    font-size: 12px;
+    font-weight: bold;
+    opacity: 0.8;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: #fff;
+    display: none;
+    width: 90%;
+}
+#suspenddiv{
+    position: absolute;
+    top: 70%;
+    left: 50%;
+    margin-left: -75px;
+    display: none;
+    z-index: 2;
+}
+#suspenddiv button{
+    width: 150px;
+    height: 40px;
+    color: #fff;
+    margin-bottom: 10px;
+    border: 1px solid #fff;
+    border-radius: 30px;
+    background-color: #a6a7ea;
+}
+#enddiv{
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    margin-left: -80px;
+    border: 1px solid gray;
+    border-radius: 5px;
+    text-align: center;
+    background-color:#a6a7ea;
+    display: none;
+    z-index: 2;
+}
+.plantext{
+    width: 160px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+}
+#planscore{
+    width: 160px;
+    height: 70px;
+    color: #fff;
+    line-height: 70px;
+    border-top: 1px solid gray;
+    border-bottom: 1px solid gray;
+    font-size: 16px;
+    font-weight: bold;
+}
+#enddiv div{
+    width: 160px;
+    height: 50px;
+}
+#enddiv div button{
+    margin-top:10px ;
+    width: 90px;
+    height: 30px;
+    background: #fff;
+    border: 1px solid #fff;
+    border-radius: 30px;
+}
+
+.plane1{
+    background: url(../image/plane1.png) no-repeat 0 0;
+}
+.bullet1{
+    background: url(../image/bullet.png) no-repeat;
+}
+.e-bullet1{
+    background: url(../image/e-bullet1.png) no-repeat;
+}
+.enemys1{
+    background: url(../image/e1.png) no-repeat;
+}
+.enemys2{
+    background: url(../image/e2.png) no-repeat;
+}
+.enemys3{
+    background: url(../image/e3.png) no-repeat;
+}
+.enemys4{
+    background: url(../image/e4.png) no-repeat;
+}
+.enemys5{
+    background: url(../image/boss1.png) no-repeat;
+}
+.breathe{
+    border-radius: 50%;
+    box-shadow:0 1px 2px rgba(0,0,0,.3);
+    -webkit-animation-timing-function:ease-in-out;
+    -webkit-animation-name:breathe;
+    -webkit-animation-duration:500ms;
+    -webkit-animation-iteration-count:infinite;
+    -webkit-animation-direction:alternate;
+}
+/*3秒无敌状态效果*/
+@-webkit-keyframes breathe {
+    0% {
+    opacity:.2;
+    box-shadow:0 1px 2px rgba(255,255,255,0.1);
+}
+100% {
+    opacity:1;
+    border:1px solid rgba(59,235,235,1);
+    box-shadow:0 1px 30px rgba(59,255,255,1);
+}
+}
