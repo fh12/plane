@@ -18,6 +18,13 @@ body,html{
 .c-green{
     color: #54ff00;
 }
+.lifebar{
+    display: inline-block;
+    vertical-align: middle;
+    width: 60px;
+    height: 16px;
+    background: url('../image/life.png') repeat-x;
+}
 .hpbar{
     height: 5px;
     border-radius: 3px;
@@ -26,7 +33,11 @@ body,html{
     position: relative;
     top: -10px;
     margin: 0 auto;
-    opacity: 0.7;
+    opacity: 0.8;
+    font-size: 24px;
+    font-weight: bolder;
+    color: red;
+    text-indent: 30px;
 }
 .gameTit{
     padding-top: 150px;
@@ -83,6 +94,7 @@ button{
     color: #fff;
     display: none;
     width: 90%;
+    z-index: 99;
 }
 #suspenddiv{
     position: absolute;
@@ -153,8 +165,14 @@ button{
 .bullet2{
     background: url(../image/bullet2.png) no-repeat;
 }
+.firebullet{
+    background: url(../image/fire.png) no-repeat;
+}
 .e-bullet1{
     background: url(../image/e-bullet1.png) no-repeat;
+}
+.laserbullet{
+    background: url(../image/laser.png) no-repeat;
 }
 .enemys1{
     background: url(../image/e1.png) no-repeat;
@@ -174,7 +192,7 @@ button{
 .enemys6{
     background: url(../image/e6.png) no-repeat;
 }
-.enemysboss{
+.enemyboss{
     background: url(../image/boss1.png) no-repeat;
 }
 .supply{
@@ -182,11 +200,36 @@ button{
     border-radius: 15px;
     box-shadow: 1px 0px 20px 0px #fff;
 }
-.bulletspeed{
-    background:#cff9f9  url('../image/bulletspeed.png');
+.supplybulletspeed{
+    background:#cff9f9 url('../image/bulletspeed.png');
 }
-.twobullets{
-    background:#cff9f9  url('../image/twobullets.png');
+.supplytwobullets{
+    background:#cff9f9 url('../image/twobullets.png');
+}
+.supplyextralife{
+    background:#ffd4d4 url('../image/life.png') no-repeat 5px 6px;
+    background-size: 80%;
+}
+.supplyfirebullets{
+    background:#ffd4d4 url('../image/fire.png') no-repeat 6px 1px;
+    background-size: 60%;
+}
+.supplylaserbullets{
+    background:#ffd4d4 url('../image/laser.png') no-repeat 6px 1px;
+    background-size: 60%;
+}
+.critdamage:after{
+    display: block;
+    content: '';
+    right: -28px;
+    height: 30px;
+    top: -7px;
+    width: 60px;
+    position: relative;
+    color: red;
+    font-size: 30px;
+    z-index: 99;
+    background: url(../image/crit.png) no-repeat;
 }
 .breathe{
     border-radius: 50%;
@@ -202,10 +245,100 @@ button{
     0% {
     opacity:.2;
     box-shadow:0 1px 2px rgba(255,255,255,0.1);
+    }
+    100% {
+        opacity:1;
+        border:1px solid rgba(59,235,235,1);
+        box-shadow:0 1px 30px rgba(59,255,255,1);
+    }
 }
-100% {
-    opacity:1;
-    border:1px solid rgba(59,235,235,1);
-    box-shadow:0 1px 30px rgba(59,255,255,1);
+
+ @keyframes move-eye-skew {
+  0% {
+    transform: none;
+  }
+  20% {
+    transform: translateX(-10px) translateY(10px) skewX(15deg) skewY(-10deg) scale(0.95);
+  }
+  25%, 44% {
+    transform: none;
+  }
+  50%, 60% {
+    transform: translateX(10px) translateY(-10px) skewX(5deg) skewY(2deg) scaleX(0.95);
+  }
+  66%, 100% {
+    transform: none;
+  }
 }
+
+.ball {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  border-radius: 50%;
+  position: relative;
+  background: radial-gradient(circle at 50% 40%, #b9cbef, #b9cbef 60%, #464545 100%);
+}
+.ball:after {
+  content: "";
+  position: absolute;
+  top: 5%;
+  left: 10%;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8) 14%, rgba(255, 255, 255, 0) 24%);
+  transform: translateX(-25px) translateY(-20px) skewX(-20deg);
+}
+
+.iris {
+  width: 40%;
+  height: 40%;
+  margin: 30%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, #208ab4 0%, #6fbfff 30%, #4381b2 100%);
+  transform: translateX(20px) translateY(-10px) skewX(15deg) skewY(2deg);
+  position: absolute;
+  animation: move-eye-skew 5s ease-out infinite;
+}
+.iris:before {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 37.5%;
+  height: 37.5%;
+  border-radius: 50%;
+  top: 31.25%;
+  left: 31.25%;
+  background: black;
+}
+.iris:after {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 31.25%;
+  height: 31.25%;
+  border-radius: 50%;
+  top: 18.75%;
+  left: 18.75%;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.ball .shadow {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.1) 40%, rgba(0, 0, 0, 0) 50%);
+    transform: rotateX(90deg) translateZ(-43px);
+    z-index: -1;
+}
+.stage {
+  width: 80px;
+  height: 80px;
+  display: block;
+  margin: 20px auto;
+  perspective-origin: 50% 50%;
+  transform-style: preserve-3d;
+  transform: rotateY(0.01deg);
 }

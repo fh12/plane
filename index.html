@@ -12,6 +12,12 @@
 <div id="contentdiv">
     <div id="startdiv">
         <h1 class="gameTit">雷霆灰机</h1>
+        <section class="stage">
+            <figure class="ball">
+              <span class="shadow"></span>
+              <span class="iris"></span>
+            </figure>
+        </section>
         <button onclick="begin()">开始游戏</button>
     </div>
     <div id="maindiv">
@@ -20,7 +26,10 @@
                 <div class="fl"><label>分数：</label><label id="score" class="f16 c-green">0</label></div>
                 <div class="fr"><label>最高分：</label><label id="highscore">0</label></div>
             </div>
-            <div class="fl"><label>生命值：</label><label id="life">3</label></div>
+            <div style="height: 30px" class="fl"><label>生命值：</label><label id="life" class="lifebar"></label></div>
+            <div style="height: 30px" class="fl"><label>bulletSpeed：</label><label id="bulletSpeed"></label></div>
+            <div style="height: 30px" class="fl"><label>bulletFrequency：</label><label id="bulletFrequency"></label></div>
+            <div style="height: 30px" class="fl"><label>bulletSpeedExtra：</label><label id="bulletSpeedExtra"></label></div>
         </div>
         <div id="suspenddiv">
             <button>继续</button><br/>
