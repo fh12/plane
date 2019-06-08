@@ -25,19 +25,32 @@ body,html{
     height: 16px;
     background: url('../image/life.png') repeat-x;
 }
+.hptotal{
+    height: 5px;
+    border-radius: 3px;
+    text-indent: 30px;
+    font-weight: bolder;
+    font-size: 0;
+    top: -17px;
+    color: red;
+    margin: 0 auto;
+    display:block;
+    border: 1px solid #b59494;
+    position: relative;
+}
 .hpbar{
+    position: absolute;
+    left: 0;
+    top: 0;
     height: 5px;
     border-radius: 3px;
     display:block;
     background: red;
-    position: relative;
-    top: -10px;
-    margin: 0 auto;
     opacity: 0.8;
     font-size: 24px;
     font-weight: bolder;
     color: red;
-    text-indent: 30px;
+    text-indent: 10px;
 }
 .gameTit{
     padding-top: 150px;
@@ -221,11 +234,11 @@ button{
 .critdamage:after{
     display: block;
     content: '';
-    right: -28px;
+    left: -20px;
     height: 30px;
-    top: -7px;
+    top: -17px;
     width: 60px;
-    position: relative;
+    position: absolute;
     color: red;
     font-size: 30px;
     z-index: 99;

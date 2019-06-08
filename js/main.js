@@ -36,11 +36,12 @@
      创建飞机类
      */
     function plan(hp, X, Y, sizeX, sizeY, score, dietime, speed, boomimage, imgClass, soundSrc, trailName, hasfire) {
-        this.planX = X;
-        this.planY = Y;
+        this.planeX = X;
+        this.planeY = Y;
         this.imagenode = null;
         this.boomSound = null;
         this.planehp = hp;
+        this.hpbartotal = null;
         this.planscore = score;
         this.sizeX = sizeX;
         this.sizeY = sizeY;
@@ -80,10 +81,14 @@
         this.init = function () {
             this.imagenode = document.createElement("div");
             this.boomimage = document.createElement("img");
+            this.hpbartotal = document.createElement("div");
             this.boomSound = document.createElement("audio");
             this.hpbar = document.createElement('span');
+            this.hpbartotal.className = 'hptotal';
+            this.hpbartotal.style.width = this.sizeX + 'px';
+            this.hpbar.style.width = this.sizeX + 'px';
+            this.hpbartotal.setAttribute('hp',this.planehp);
             this.hpbar.className = 'hpbar';
-            this.hpbar.style.width = (this.planehp * 8) + 'px';
             this.boomimage.src = this.planboomimage;
             this.boomSound.autoplay = '';
             this.boomSound.src = soundSrc;
@@ -92,12 +97,13 @@
             this.boomimage.style.display = 'none';
             this.imagenode.style.width = sizeX + 'px';
             this.imagenode.style.height = sizeY + 'px';
-            this.imagenode.style.left = this.planX + "px";
-            this.imagenode.style.top = this.planY + "px";
+            this.imagenode.style.left = this.planeX + "px";
+            this.imagenode.style.top = this.planeY + "px";
             this.imagenode.className = imgClass;
-            this.imagenode.appendChild(this.boomimage)
-            this.imagenode.appendChild(this.boomSound)
-            this.imagenode.appendChild(this.hpbar)
+            this.hpbartotal.appendChild(this.hpbar);
+            this.imagenode.appendChild(this.hpbartotal);
+            this.imagenode.appendChild(this.boomimage);
+            this.imagenode.appendChild(this.boomSound);
             mainDiv.appendChild(this.imagenode);
         }
         this.init();
@@ -271,10 +277,10 @@
         // var oevent=window.event||arguments[0];
         // var chufa=oevent.srcElement||oevent.target;
         var oevent = ev.touches[0]
-        var selfplanX = oevent.clientX;
-        var selfplanY = oevent.clientY;
-        ourPlan.style.left = Math.max(0, Math.min(bodyWidth - selfplan.sizeX, selfplanX - selfplan.sizeX / 2)) + "px";
-        ourPlan.style.top = Math.max(0, Math.min(bodyheight - selfplan.sizeY, selfplanY - selfplan.sizeY / 2)) + "px";
+        var selfplaneX = oevent.clientX;
+        var selfplaneY = oevent.clientY;
+        ourPlan.style.left = Math.max(0, Math.min(bodyWidth - selfplan.sizeX, selfplaneX - selfplan.sizeX / 2)) + "px";
+        ourPlan.style.top = Math.max(0, Math.min(bodyheight - selfplan.sizeY, selfplaneY - selfplan.sizeY / 2)) + "px";
     }
     /*
     暂停事件
@@ -549,7 +555,9 @@
                         enemys[j].boomimage.style.display = 'block';
                         enemys[j].planeisdie = true;
                         life.style.width = selfplan.planehp*20 + 'px';
-                        selfplan.hpbar.style.width = (selfplan.planehp * 8) + 'px';
+                        if(selfplan.planehp<3){
+                            selfplan.hpbar.style.width = selfplan.sizeX / 3 * selfplan.planehp + 'px';
+                        }
                     }
                     //判断我方子弹与敌机碰撞
                     if (isCollide(bullets, enemys, i, j)) {
@@ -562,9 +570,10 @@
                             addClass(enemys[j].imagenode, 'critdamage')
                         }
                         enemys[j].planehp = enemys[j].planehp - attack;
-                        enemys[j].hpbar.style.width = (enemys[j].planehp * 8) + 'px';
+                        enemys[j].hpbar.style.width = parseInt(enemys[j].hpbartotal.style.width)/parseInt(enemys[j].hpbartotal.getAttribute('hp')) * enemys[j].planehp + 'px';
                         //敌机血量为0，敌机图片换为爆炸图片，死亡标记为true，计分
                         if (enemys[j].planehp <= 0) {
+                            enemys[j].hpbar.style.width = 0;
                             enemys[j].boomSound.play();
                             scores = scores + enemys[j].planscore;
                             scorelabel.innerHTML = scores;
@@ -589,7 +598,9 @@
                     removeClass(selfplan.imagenode, 'breathe')
                 }, 3000)
                 life.style.width = selfplan.planehp*20 + 'px';
-                selfplan.hpbar.style.width = (selfplan.planehp * 8) + 'px';
+                if(selfplan.planehp<3){
+                    selfplan.hpbar.style.width = selfplan.sizeX / 3 * selfplan.planehp + 'px';
+                }
                 //删除子弹
                 mainDiv.removeChild(enemybullets[i].imagenode);
                 enemybullets.splice(i, 1);
@@ -612,7 +623,10 @@
                     case 'extralife':
                         selfplan.planehp++;
                         life.style.width = selfplan.planehp*20 + 'px';
-                        selfplan.hpbar.style.width = (selfplan.planehp * 8) + 'px';
+                        selfplan.hpbartotal.setAttribute('hp',parseInt(selfplan.hpbartotal.getAttribute('hp')) + 1);
+                        if(selfplan.planehp<=3){
+                            selfplan.hpbar.style.width = selfplan.sizeX / 3 * selfplan.planehp + 'px';
+                        }
                         break;
                     case 'laserbullets':
                         bulletType = 'laserbullets';
@@ -674,7 +688,6 @@
     var set;
 
     function begin() {
-
         startdiv.style.display = "none";
         mainDiv.style.display = "block";
         selfplan.imagenode.style.display = "block";
@@ -700,7 +713,7 @@
     function removeClass(ele, cls) {
         if (hasClass(ele, cls)) {
             var reg = new RegExp("(\\s|^)" + cls + "(\\s|$)");
-            ele.className = ele.className.replace(reg, " ");
+            ele.className = ele.className.replace(reg, "");
         }
     }
     //产生min到max之间的随机数
