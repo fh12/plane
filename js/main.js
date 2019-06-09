@@ -21,7 +21,7 @@
     // 我军发射子弹默认频率
     var bulletFrequency = 10;
     // 我军发射子弹速度值
-    var bulletSpeed = 1;
+    var bulletSpeed = 4;
     // 我军发射子弹速度加成
     var bulletSpeedExtra = 0;
 
@@ -73,9 +73,11 @@
             } else {
                 this.imagenode.style.top = this.imagenode.offsetTop + this.speed + 5 + "px";
             }
-
-            if (this.trailName == 'curve') {
-                this.imagenode.style.left = 20 * Math.sqrt(this.imagenode.offsetTop) + "px";
+            switch (this.trailName){
+                case 'curve':
+                    this.imagenode.style.left = 20 * Math.sqrt(this.imagenode.offsetTop) + "px";
+                    break;
+                
             }
         }
         this.init = function () {
@@ -128,12 +130,15 @@
         /*
          移动行为
          */
-        this.bulletmove = function () {
+        this.bulletmove = function (x1,x2) {
             if (type === 'friend') {
                 this.imagenode.style.top = this.imagenode.offsetTop - 20 + "px";
             }
             if (type === 'enemy') {
+                // 自动追踪
+                var q = getequation(x1,x2)
                 this.imagenode.style.top = this.imagenode.offsetTop + 5 + "px";
+                this.imagenode.style.left = parseInt(this.imagenode.style.left) - q + 'px'
             }
 
         }
@@ -169,6 +174,7 @@
         // 补给包的移动
         this.move = function() {
             this.imagenode.style.top = this.imagenode.offsetTop + 2 + "px";
+            this.imagenode.style.left = 1/2 * this.imagenode.offsetTop + "px";
             
         };
         // 初始化
@@ -221,7 +227,7 @@
         bullet.call(this, X, Y, 30, 37, "bullet bullet2", 1.5, 'music/bullet/shot.mp3', 'friend', 0, 2, 4);
     }
     function firebullet(X, Y) {
-        bullet.call(this, X, Y, 35, 72, "bullet firebullet", 4, 'music/bullet/firegun.mp3', 'friend', 0, 1, 1);
+        bullet.call(this, X, Y, 35, 72, "bullet firebullet", 3, 'music/bullet/firegun.mp3', 'friend', 0, 1, 1);
     }
     function laserbullet(X, Y) {
         bullet.call(this, X, Y, 12, 40, "bullet laserbullet", 1, 'music/bullet/lasergun1.mp3', 'friend', 0.2, 2, 6);
@@ -250,8 +256,8 @@
     function enemy4(a, b) {
         plan.call(this, 10, random(a, b), -100, 100, 65, 50, 1200, random(1,2), "image/boom.gif", "enemys4 plane", 'music/explode/Explode01.ogg', 'default', true);
     }
-    function enemy5(a, b) {
-        plan.call(this, 1, random(a, b), -100, 45, 37, 10, 860, random(2,3), "image/boom.gif", "enemys5 plane", 'music/explode/Explode02.ogg', 'curve', false);
+    function enemy5(a, b, trailName) {
+        plan.call(this, 1, random(a, b), -100, 45, 37, 10, 860, random(2,3), "image/boom.gif", "enemys5 plane", 'music/explode/Explode02.ogg', trailName, false);
     }
     function enemyboss(a, b) {
         plan.call(this, 20, random(a, b), -100, 150, 173, 300, 1240, random(1,2), "image/boom.gif", "enemyboss plane", 'music/explode/Explode03.ogg', 'default',false);
@@ -360,7 +366,7 @@
     var mark1 = 0;
 
     // 创建子弹种类
-    var bulletType = 'laserbullets';
+    var bulletType = 'default';
 
     var backgroundPositionY = 0;
 
@@ -378,60 +384,78 @@
         if (backgroundPositionY == 768) {
             backgroundPositionY = 0;
         }
+        // 总进程标志位++
         mark++;
         mark1++;
+        
+        // 每间隔一定时间，随机生成补给包
+        if( mark % 2000 === 0){
+            var a =  randomInt(0,4)
+            switch(a){
+               case 0:
+                supplybags.push(new supplybulletspeed());
+                break;
+               case 1:
+                supplybags.push(new supplyextralife());
+                break;
+               case 2:
+                supplybags.push(new supplyfirebullets());
+                break;
+               case 3:
+                supplybags.push(new supplytwobullets());
+                break;
+               case 4:
+                supplybags.push(new supplylaserbullets());
+                break;
+           }
+        }
         /*
-        创建敌方飞机
+        创建敌方飞机和补给包
          */
 
         if (mark1 % 150 == 0) {
             //小飞机
             enemys.push(new enemy1(0, 280));
-            supplybags.push(new supplybulletspeed());
+            // supplybags.push(new supplybulletspeed());
         }
         if (mark1 % 260 == 0) {
-            supplybags.push(new supplyextralife());
+
         }
         if (mark1 % 350 == 0) {
             //中飞机
             enemys.push(new enemy2(0, 204));
-            supplybags.push(new supplyfirebullets());
         }
         if (mark1 % 450 == 0) {
             //中飞机
             enemys.push(new enemy3(0, 204));
-            supplybags.push(new supplytwobullets());
         }
         if (mark1 % 550 == 0) {
             //中飞机
             enemys.push(new enemy4( 0, 204));
-            supplybags.push(new supplylaserbullets());
         }
         if (mark1 % 650 == 0) {
             //小飞机 曲线路
-            enemys.push(new enemy5( 0, 10))
+            enemys.push(new enemy5( 0, 10, 'curve'))
         }
         if (mark1 % 670 == 0) {
             //小飞机 曲线路
-            enemys.push(new enemy5( 0, 10))
+            enemys.push(new enemy5( 0, 10, 'curve'))
         }
         if (mark1 % 690 == 0) {
             //小飞机 曲线路
-            enemys.push(new enemy5( 0, 10))
+            enemys.push(new enemy5( 0, 10, 'curve'))
         }
         if (mark1 % 710 == 0) {
             //小飞机 曲线路
-            enemys.push(new enemy5( 0, 10))
+            enemys.push(new enemy5( 0, 10, 'curve'))
             mark1 = 0;
         }
         if (mark == 1000) {
             //大飞机
             enemys.push(new enemyboss( 57, 120));
-            supplybags.push(new supplytwobullets());
         }
         if (mark == 3000) {
             //子弹速度补给包
-            supplybags.push(new supplybulletspeed());
         }
         if (mark == 6500) {
             //大飞机
@@ -447,7 +471,7 @@
                 enemys[i].planmove();
                 if (enemys[i].hasfire && mark % 150 == 0) {
                     // 创建敌军子弹
-                    enemybullets.push(new enemybullet1(parseInt(enemys[i].imagenode.style.left) + 27, parseInt(enemys[i].imagenode.style.top) + 40));
+                    enemybullets.push(new enemybullet1(parseInt(enemys[i].imagenode.style.left) + enemys[i].sizeX/2 -7, parseInt(enemys[i].imagenode.style.top) + 40));
                 }
             }
             /*
@@ -479,7 +503,6 @@
         /*创建我军子弹*/
         if (mark % (bulletFrequency-(bulletSpeed/-2)-bulletSpeedExtra) == 0) {
             switch(bulletType){
-                // 增加子弹速度的补给包
                 case 'default':
                     bullets.push(new defaultbullet(parseInt(selfplan.imagenode.style.left) + (selfplan.sizeX/2) - 7, parseInt(selfplan.imagenode.style.top) - 12));
                     break;
@@ -509,7 +532,7 @@
 
         /*移动敌军子弹*/
         for (var i = 0; i < enemybullets.length; i++) {
-            enemybullets[i].bulletmove();
+            enemybullets[i].bulletmove(parseInt(enemybullets[i].imagenode.style.left),parseInt(selfplan.imagenode.style.left)+selfplan.sizeX/2);
             /*如果子弹超出边界,删除子弹*/
             if (enemybullets[i].imagenode.offsetTop > bodyheight) {
                 mainDiv.removeChild(enemybullets[i].imagenode);
@@ -519,7 +542,7 @@
         /*移动补给包*/
         for (var i = 0; i < supplybags.length; i++) {
             supplybags[i].move();
-            /*如果子弹超出边界,删除子弹*/
+            /*如果补给包超出边界,删除补给包*/
             if (supplybags[i].imagenode.offsetTop > bodyheight) {
                 mainDiv.removeChild(supplybags[i].imagenode);
                 supplybags.splice(i, 1);
@@ -564,6 +587,7 @@
                         //敌军生命 = 敌机血量 - 子弹攻击力 - （子弹暴击率*子弹暴击伤害*子弹攻击力）
                         var isCrit = getRandom(bullets[i].critRate)
                         var attack = bullets[i].bulletattck + isCrit * bullets[i].critDamage * bullets[i].bulletattck
+                        // 暴击效果
                         if(isCrit){
                             enemys[j].issuffercrit = true
                             enemys[j].hpbar.innerHTML = attack
@@ -610,16 +634,21 @@
         for (var i = 0; i < supplybags.length; i++) {
             if (isCollide(supplybags, 'selfplan', null, i)) {
                 switch(supplybags[i].type){
-                    // 增加子弹速度的补给包
+                        // 增加子弹速度的补给包（全武器加成属性）
                     case 'bulletspeed':
-                        bulletSpeedExtra++;
+                        if(bulletSpeedExtra<4){
+                          bulletSpeedExtra++;  
+                        }
                         break;
+                        // 双枪补给包
                     case 'twobullets':
                         bulletType = 'twobullets';
                         break;
+                        // 火枪补给包
                     case 'firebullets':
                         bulletType = 'firebullets';
                         break;
+                        // 增加额外生命值的补给包
                     case 'extralife':
                         selfplan.planehp++;
                         life.style.width = selfplan.planehp*20 + 'px';
@@ -720,6 +749,10 @@
     function random(min, max) {
         return Math.floor(min + Math.random() * (max - min));
     }
+    //产生min到max之间的随机整数
+    function randomInt(min, max) {
+        return parseInt(Math.random()*(max-min+1)+min,10)
+    }
     // 暴击率触发可能性
     function getRandom(probability){  
         var probability = probability*100;  
@@ -732,3 +765,7 @@
             return 0;  
         }  
     };  
+    // 求子弹追踪我方飞机需要的水平方向速度（自动追踪功能，40表示40*20=800毫秒，子弹从顶部飞到最低需要的时间）
+    function getequation(x1,x2) {
+        return (x1-x2)/40
+    }

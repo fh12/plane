@@ -44,11 +44,10 @@
     </div>
 </div>
 <script>
-    var bodyheight = document.documentElement.clientHeight
-    var bodyWidth = document.documentElement.clientWidth
-    document.getElementById('startdiv').style.height = bodyheight + 'px'
-    document.querySelector('body').style.width = bodyWidth + 'px'
-    document.getElementById('maindiv').style.height = bodyheight + 'px'
+    // 阻止浏览器的默认上下左右滑动的行为
+    document.querySelector('body').addEventListener('touchmove', function (ev) {
+        ev.preventDefault();
+    },{passive:false});
 </script>
 <script type="text/javascript" src="js/main.js"></script>
 </body>
