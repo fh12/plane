@@ -189,6 +189,9 @@ button{
 .e-bullet1{
     background: url(../image/e-bullet1.png) no-repeat;
 }
+.e-missile{
+    background: url(../image/missile.png) no-repeat;
+}
 .laserbullet{
     background: url(../image/laser.png) no-repeat;
 }
