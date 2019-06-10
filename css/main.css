@@ -55,7 +55,7 @@ body,html{
 .gameTit{
     padding-top: 150px;
     color: #a6a7ea;
-    font-size: 40px;
+    font-size: 60px;
     text-align: center;
     text-shadow: 3px 3px 10px #333
 }
@@ -70,7 +70,7 @@ body,html{
     height: 100%;
     background-image: url(../image/startbg.jpg);
     background-repeat: no-repeat;
-    background-size: auto;
+    background-size: cover;
     position: absolute;
 }
 button{
@@ -175,7 +175,7 @@ button{
 }
 
 .plane1{
-    background: url(../image/plane1.png) no-repeat 0 0;
+    background: url(../image/plane1.png) no-repeat 0px 10px;
 }
 .bullet1{
     background: url(../image/bullet.png) no-repeat;
@@ -213,8 +213,8 @@ button{
 .enemys6{
     background: url(../image/e6.png) no-repeat;
 }
-.enemyboss{
-    background: url(../image/boss1.png) no-repeat;
+.enemys7{
+    background: url(../image/e7.png) no-repeat 30px -2px;
 }
 .supply{
     border: 1px solid #fff;
@@ -252,6 +252,13 @@ button{
     z-index: 99;
     background: url(../image/crit.png) no-repeat;
 }
+.propeller{
+    background: url('../image/lxj2.png') no-repeat;
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    top: 0;
+}
 .breathe{
     border-radius: 50%;
     box-shadow:0 1px 2px rgba(0,0,0,.3);
@@ -260,6 +267,17 @@ button{
     animation-duration:500ms;
     animation-iteration-count:infinite;
     animation-direction:alternate;
+}
+.circle{
+    animation: circle 3s infinite linear;
+}
+@keyframes circle{
+    0%{
+        transform: rotate(360deg)
+    }
+    100%{
+        transform: rotate(0deg)
+    }
 }
 /*3秒无敌状态效果*/
 @keyframes breathe {
