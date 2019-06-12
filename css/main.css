@@ -189,6 +189,9 @@ button{
 .e-bullet1{
     background: url(../image/e-bullet1.png) no-repeat;
 }
+.e-particle{
+    background: url(../image/particle.png) no-repeat;
+}
 .e-missile{
     background: url(../image/missile.png) no-repeat;
 }
@@ -269,7 +272,7 @@ button{
     animation-direction:alternate;
 }
 .circle{
-    animation: circle 3s infinite linear;
+    animation: circle 0.5s infinite linear;
 }
 @keyframes circle{
     0%{
