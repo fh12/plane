@@ -26,7 +26,7 @@ body,html{
     background: url('../image/life.png') repeat-x;
 }
 .hptotal{
-    height: 5px;
+    height: 2px;
     border-radius: 3px;
     text-indent: 30px;
     font-weight: bolder;
@@ -42,7 +42,7 @@ body,html{
     position: absolute;
     left: 0;
     top: 0;
-    height: 5px;
+    height: 2px;
     border-radius: 3px;
     display:block;
     background: red;
@@ -195,6 +195,13 @@ button{
 .e-missile{
     background: url(../image/missile.png) no-repeat;
 }
+.e-b1{
+    background: url(../image/b1.png) no-repeat;
+    animation: circle 0.5s infinite linear;
+}
+.e-b2{
+    background: url(../image/b2.png) no-repeat;
+}
 .laserbullet{
     background: url(../image/laser.png) no-repeat;
 }
@@ -218,6 +225,9 @@ button{
 }
 .enemys7{
     background: url(../image/e7.png) no-repeat 30px -2px;
+}
+.boss1{
+    background: url(../image/boss1.png) no-repeat;
 }
 .supply{
     border: 1px solid #fff;
@@ -325,8 +335,8 @@ button{
 .ball:after {
   content: "";
   position: absolute;
-  top: 5%;
-  left: 10%;
+  top: 26%;
+  left: 37%;
   width: 100%;
   height: 100%;
   border-radius: 50%;
@@ -340,7 +350,7 @@ button{
   margin: 30%;
   border-radius: 50%;
   background: radial-gradient(circle at 50% 50%, #208ab4 0%, #6fbfff 30%, #4381b2 100%);
-  transform: translateX(20px) translateY(-10px) skewX(15deg) skewY(2deg);
+  transform: translateX(8px) translateY(-8px) skewX(12deg) skewY(2deg);
   position: absolute;
   animation: move-eye-skew 5s ease-out infinite;
 }
@@ -372,14 +382,15 @@ button{
     width: 100%;
     height: 100%;
     background: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.1) 40%, rgba(0, 0, 0, 0) 50%);
-    transform: rotateX(90deg) translateZ(-43px);
+    transform: rotateX(90deg) translateZ(-30px);
     z-index: -1;
 }
 .stage {
-  width: 80px;
-  height: 80px;
+  width: 40px;
+  height: 40px;
   display: block;
-  margin: 20px auto;
+  margin-top: 58px;
+  margin-left: 56px;
   perspective-origin: 50% 50%;
   transform-style: preserve-3d;
   transform: rotateY(0.01deg);
