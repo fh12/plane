@@ -1,0 +1,127 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="content" content="text/html" charset="utf-8"/>
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1,user-scalable=no" />
+    <title>纯js实现的飞机大战HTML5小游戏代码</title>
+    <link rel="stylesheet" type="text/css" href="css/main.css"/>
+</head>
+<style>
+.table-01 td, .table-01 th{
+    padding: 5px 10px;
+    text-align: center;
+    font-size: 12px;
+}
+.table-01 th{
+    font-weight: normal;
+}
+.btn-01{
+    margin-top:10px ;
+    width: 90px;
+    height: 30px;
+    color: #fff;
+    background: #34c112;
+    border: 1px solid #fff;
+    border-radius: 30px;
+}
+.bg-ccc{
+    background: #f0fffe;
+}
+</style>
+<body class="bg-ccc">
+    <div class="p10">
+        <h3 class="mt10">游戏说明：</h3>
+        <div class="p10">
+            <table cellspacing="0" border="0" width="100%" class="table-01" align="center">
+            <tr>
+                <th>
+                <p>补给包</p> 
+                </th>
+                <th>功能</th>
+                <th>攻击力</th>
+                <th>攻速</th>
+                <th>暴击率</th>
+                <th>暴击伤害(倍)</th>
+            </tr>
+            <tr>
+                <td><div class="supply supplytwobullets"></div></td>
+                <td>双子弹</td>
+                <td>3</td>
+                <td>5</td>
+                <td>0</td>
+                <td>2</td>
+            </tr>
+            <tr>
+                <td><div class="supply supplyfirebullets"></div></td>
+                <td>火弹药</td>
+                <td>4</td>
+                <td>1</td>
+                <td>0.1</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td><div class="supply supplylaserbullets"></div></td>
+                <td>激光弹</td>
+                <td>2</td>
+                <td>7</td>
+                <td>0.3</td>
+                <td>2</td>
+            </tr>
+            <tr>
+                <td><div class="supply supplyshotgun"></div></td>
+                <td>散弹</td>
+                <td>1</td>
+                <td>3</td>
+                <td>0</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td><div class="supply supplyextralife"></div></td>
+                <td>生命值+1</td>
+                <td>/</td>
+                <td>/</td>
+                <td>/</td>
+                <td>/</td>
+            </tr>
+            <tr>
+                <td><div class="supply supplycritRate"></div></td>
+                <td>暴击率+0.2</td>
+                <td>/</td>
+                <td>/</td>
+                <td>+0.2</td>
+                <td>/</td>
+            </tr>
+            <tr>
+                <td><div class="supply supplyattack"></div></td>
+                <td>子弹攻击力+1</td>
+                <td>+1</td>
+                <td>/</td>
+                <td>/</td>
+                <td>/</td>
+            </tr>
+            <tr>
+                <td><div class="supply supplybulletspeed"></div></td>
+                <td>子弹速度+1</td>
+                <td>/</td>
+                <td>+1</td>
+                <td>/</td>
+                <td>/</td>
+            </tr>
+            </table>
+        </div>
+        <div class="tac">
+            <button class="btn-01" onclick="back()">回到主页</button>
+        </div>
+    </div>
+</body>
+<script>
+    // 阻止浏览器的默认上下左右滑动的行为
+    document.querySelector('body').addEventListener('touchmove', function (ev) {
+        ev.preventDefault();
+    },{passive:false});
+    function back(){
+        window.history.go(-1);
+    }
+</script>
+</body>
+</html>

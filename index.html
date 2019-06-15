@@ -17,15 +17,26 @@
               <span class="iris"></span>
             </figure>
         </section>
-        <button onclick="begin()">开始游戏</button>
+        <div class="loading">
+            资源加载中...
+        </div>
+        <div class="btn-box">
+            <button class="begin" onclick="begin()">开始游戏</button>
+            <button class="tips" onclick="tips()">游戏说明</button>
+        </div>
+        
     </div>
     <div id="maindiv">
         <div id="scorediv">
             <div style="height: 30px">
                 <div class="fl"><label>分数：</label><label id="score" class="f16 c-green">0</label></div>
-                <div class="fr"><label>最高分：</label><label id="highscore">0</label></div>
+                <div class="fr"><label>历史最高分：</label><label id="highscore">0</label></div>
             </div>
-            <div class="fl"><label>生命值：</label><label id="life" class="lifebar"></label></div>
+            <div style="height: 30px">
+                <div class="fl"><label>生命值：</label><label id="life" class="lifebar"></label></div>
+                <div class="fr"><label>最高评分：</label><label id="highgrade">DDD</label></div>
+            </div>
+            
         </div>
         <div id="suspenddiv">
             <button>继续</button><br/>
@@ -60,6 +71,13 @@
     document.querySelector('body').addEventListener('touchmove', function (ev) {
         ev.preventDefault();
     },{passive:false});
+    function tips(){
+        window.location.href="./tips.html"
+    }
+    window.onload = function(){
+        document.querySelector('.loading').style.display = 'none';
+        document.querySelector('.btn-box').style.display = 'block';
+    }
 </script>
 <script type="text/javascript" src="js/main.js"></script>
 </body>

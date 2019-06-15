@@ -12,11 +12,35 @@ body,html{
 .fr{
     float: right;
 }
+.p10{
+    padding: 10px;
+}
+.mt10{
+    margin-top: 10px;
+}
+.mt20{
+    margin-top: 20px;
+}
 .f16{
     font-size: 16px;
 }
 .c-green{
     color: #54ff00;
+}
+.loading{
+    position: absolute;
+    left: 50%;
+    bottom: 15%;
+    width: 100px;
+    margin-left: -50px;
+    margin-top: 60px;
+    text-align: center;
+    font-weight: bolder;
+    color: #fff;
+    font-size: 16px;
+}
+.btn-box{
+    display: none;
 }
 .lifebar{
     display: inline-block;
@@ -76,9 +100,21 @@ body,html{
 button{
     outline: none;
 }
-#startdiv button{
+.begin{
     position: absolute;
     bottom: 20%;
+    left: 50%;
+    margin-left:-75px;
+    width: 150px;
+    height: 40px;
+    border: 1px solid #fff;
+    border-radius: 30px;
+    color: #fff;
+    background-color: #a6a7ea;
+}
+.tips{
+    position: absolute;
+    bottom: 10%;
     left: 50%;
     margin-left:-75px;
     width: 150px;
@@ -103,7 +139,7 @@ button{
     z-index: 1;
 }
 #scorediv{
-    font-size: 12px;
+    font-size: 10px;
     font-weight: bold;
     opacity: 0.8;
     position: absolute;
@@ -193,6 +229,9 @@ button{
 .e-missile{
     background: url(../image/missile.png) no-repeat;
 }
+.shotgun{
+    background: url(../image/shotgun.png) no-repeat;
+}
 .e-b1{
     background: url(../image/b1.png) no-repeat;
     animation: circle 0.5s infinite linear;
@@ -255,18 +294,21 @@ button{
     background: url(../image/boss1.png) no-repeat -150px 0;
 }
 .supply{
+    width: 30px;
+    height: 30px;
     border: 1px solid #fff;
     border-radius: 15px;
     box-shadow: 1px 0px 20px 0px #fff;
+    margin: 0 auto;
 }
 .supplybulletspeed{
-    background:#cff9f9 url('../image/bulletspeed.png');
+    background:#51fe28 url('../image/bulletspeed.png');
 }
 .supplytwobullets{
-    background:#cff9f9 url('../image/twobullets.png');
+    background:#36ffd2 url('../image/twobullets.png');
 }
 .supplyextralife{
-    background:#ffd4d4 url('../image/life.png') no-repeat 5px 6px;
+    background:#f3df6f url('../image/life.png') no-repeat 5px 6px;
     background-size: 80%;
 }
 .supplyfirebullets{
@@ -274,11 +316,22 @@ button{
     background-size: 60%;
 }
 .supplylaserbullets{
-    background:#ffd4d4 url('../image/laser.png') no-repeat 6px 1px;
+    background:#80c3f3 url('../image/laser.png') no-repeat 6px 1px;
     background-size: 60%;
 }
-.critdamage .hpbar{
-    animation: attack 0.5s infinite ease-in-out;
+.supplycritRate{
+    background:#5ad4e1 url('../image/crit.png') no-repeat 6px 6px;
+    background-size: 60%;
+}
+.supplyattack{
+    background:#9d6fc8 url('../image/bullet.png') no-repeat 6px 6px;
+    background-size: 60%;
+}
+.supplyshotgun{
+    background:#4e4aff url('../image/shot.png') no-repeat;
+}
+.critdamage .hpbar,.underattack .hpbar{
+    animation: attack 0.3s ease-in-out;
 }
 .critdamage:after{
     display: block;

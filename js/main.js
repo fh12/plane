@@ -8,29 +8,44 @@
     var scorelabel = document.getElementById("score");
     //获得历史最高分界面
     var highscorelabel = document.getElementById("highscore");
+    //获得历史最高评分
+    var highgradeLabel = document.getElementById("highgrade");
     //获得暂停界面
     var suspenddiv = document.getElementById("suspenddiv");
     //获得游戏结束界面
     var enddiv = document.getElementById("enddiv");
     //获得游戏结束后分数统计界面
     var planscore = document.getElementById("planscore");
+    //任务成功或失败标志
+    var missionstatusLabel = document.getElementById("missionstatus");
     //初始化分数
     var scores = 0;
+    //评分等级
+    var grade = 0;
     // 我军飞机生命值
     var life = document.getElementById("life");
     // 我军发射子弹速度值
     var bulletSpeed = 4;
     // 我军发射子弹速度加成
     var bulletSpeedExtra = 0;
+    // 我军发射子弹暴击率加成
+    var bulletCritExtra = 0;
+    // 我军发射子攻击力加成
+    var bulletAttackExtra = 0;
 
+    var gardetxt = ['DDD','CCC', 'BBB', 'AAA', 'SSS'];
     var bodyWidth = document.documentElement.clientWidth
     var bodyheight = document.documentElement.clientHeight
     if(bodyWidth > 1024){
         alert('请在触摸屏上进行游戏！')
     }
     var highscore = window.localStorage.getItem('highScore')
+    var highgrade = window.localStorage.getItem('highgrade')
     if(highscore){
       highscorelabel.innerHTML = highscore  
+    }
+    if(highgrade){
+        highgradeLabel.innerHTML = gardetxt[highgrade]
     }
     
     /*
@@ -199,6 +214,7 @@
         this.bulletmove = function (x1,x2,y1,y2) {
             if (belong === 'friend') {
                 this.imagenode.style.top = this.imagenode.offsetTop - 20 + "px";
+                this.imagenode.style.left = this.imagenode.offsetLeft + 1.5*this.speedX + "px";
             }
             if (belong === 'enemy') {
                 this.imagenode.style.top = this.imagenode.offsetTop + 1.5*this.speedY + "px";
@@ -294,7 +310,7 @@
     function supplylaserbullets(X, Y){
         supplybag.call(this, X, Y, 'supply supplylaserbullets',1000,'laserbullets')
     }
-    //暴击率+0.1（全武器属性）
+    //暴击率+0.2（全武器属性）
     function supplycritRate(X, Y){
         supplybag.call(this, X, Y, 'supply supplycritRate',1000,'critRate')
     }
@@ -302,21 +318,28 @@
     function supplyattack(X, Y){
         supplybag.call(this, X, Y, 'supply supplyattack',1000,'attack')
     }
+    //散弹补给包
+    function supplyshotgun(X, Y){
+        supplybag.call(this, X, Y, 'supply supplyshotgun',1000,'shotgun')
+    }
 
     /*
      创建我方子弹类
      */
     function defaultbullet(X, Y) {
-        bullet.call(this, X, Y, 15, 37, "bullet bullet1", 1.5, 'music/bullet/shot.mp3', 'friend', 0, 1.5, 0, 5, 'default');
+        bullet.call(this, X, Y, 15, 37, "bullet bullet1", 2, 'music/bullet/shot.mp3', 'friend', 0, 1, 0, 5, 'default');
     }
     function doublebullet(X, Y) {
-        bullet.call(this, X, Y, 30, 37, "bullet bullet2", 2, 'music/bullet/shot.mp3', 'friend', 0, 2, 0, 5, 'default');
+        bullet.call(this, X, Y, 30, 37, "bullet bullet2", 3, 'music/bullet/shot.mp3', 'friend', 0, 2, 0, 5, 'default');
     }
     function firebullet(X, Y) {
-        bullet.call(this, X, Y, 35, 72, "bullet firebullet", 3, 'music/bullet/firegun.mp3', 'friend', 0.2, 1, 0, 1, 'default');
+        bullet.call(this, X, Y, 35, 72, "bullet firebullet", 4, 'music/bullet/firegun.mp3', 'friend', 0.1, 1, 0, 1, 'default');
     }
     function laserbullet(X, Y) {
-        bullet.call(this, X, Y, 12, 40, "bullet laserbullet", 1, 'music/bullet/lasergun2.mp3', 'friend', 0.3, 2, 0, 7, 'default');
+        bullet.call(this, X, Y, 12, 40, "bullet laserbullet", 2, 'music/bullet/lasergun2.mp3', 'friend', 0.3, 2, 0, 7, 'default');
+    }
+    function shotgun(X, Y, speedX) {
+        bullet.call(this, X, Y, 20, 39, "bullet shotgun", 1, 'music/bullet/shotgun.mp3', 'friend', 0, 1, speedX, 3, 'default');
     }
 
     /*创建敌军子弹*/
@@ -333,7 +356,7 @@
         bullet.call(this, X, Y, 20, 19, "bullet e-b1", 1, 'music/bullet/lasergun2.mp3', 'enemy', 0, 1.2, sppedX, 3, 'default');
     }
     function bossbullet2(X, Y, sppedX) {
-        bullet.call(this, X, Y, 15, 49, "bullet e-b2", 1, 'music/bullet/assaultgun.mp3', 'enemy', 0, 1.2, sppedX, 6, 'missile');
+        bullet.call(this, X, Y, 15, 49, "bullet e-b2", 1, 'music/bullet/lasergun1.mp3', 'enemy', 0, 1.2, sppedX, 6, 'missile');
     }
     function bossbullet3(X, Y, sppedX) {
         bullet.call(this, X, Y, 35, 124, "bullet e-b3", 1, 'music/bullet/firegun.mp3', 'enemy', 0, 1.2, sppedX, 10, 'default');
@@ -343,26 +366,26 @@
     创建敌机类
      */
     function enemy1(a, b, trailName, bulletType) {
-        plan.call(this, 3, a, b, 50, 34, 10, 600, 2, "image/boom.gif", "enemys1 plane", 'music/explode/Explode02.ogg', trailName, true, bulletType,150);
+        plan.call(this, 4, a, b, 50, 34, 10, 600, 2, "image/boom.gif", "enemys1 plane", 'music/explode/Explode02.ogg', trailName, true, bulletType,150);
     }
     function enemy2(a, b, trailName, bulletType) {
-        plan.call(this, 16, a, b, 70, 60, 30, 600, 1, "image/boom.gif", "enemys2 plane", 'music/explode/Explode01.ogg', trailName, true, bulletType,40);
+        plan.call(this, 26, a, b, 70, 60, 30, 600, 1, "image/boom.gif", "enemys2 plane", 'music/explode/Explode01.ogg', trailName, true, bulletType,70);
     }
     function enemy3(a, b, trailName, bulletType) {
-        plan.call(this, 10, a, b, 84, 54, 40, 600, random(1,3), "image/boom.gif", "enemys3 plane", 'music/explode/Explode01.ogg', trailName, true, bulletType,100);
+        plan.call(this, 20, a, b, 84, 54, 40, 600, random(1,3), "image/boom.gif", "enemys3 plane", 'music/explode/Explode01.ogg', trailName, true, bulletType,100);
     }
     function enemy4(a, b, trailName, bulletType) {
-        plan.call(this, 12, a, b, 100, 65, 50, 600, random(1,2), "image/boom.gif", "enemys4 plane", 'music/explode/Explode01.ogg', trailName, true, bulletType,100);
+        plan.call(this, 24, a, b, 100, 65, 50, 600, random(1,2), "image/boom.gif", "enemys4 plane", 'music/explode/Explode01.ogg', trailName, true, bulletType,100);
     }
     function enemy5(a, b, trailName, bulletType) {
-        plan.call(this, 3, a, b, 45, 37, 10, 600, 7, "image/boom.gif", "enemys5 plane", 'music/explode/Explode02.ogg', trailName, true, bulletType,120);
+        plan.call(this, 4, a, b, 45, 37, 10, 600, 4, "image/boom.gif", "enemys5 plane", 'music/explode/Explode02.ogg', trailName, true, bulletType,120);
     }
     function enemy6(a, b, trailName, bulletType) {
-        plan.call(this, 16, a, b, 90, 78, 80, 600, 1, "image/boom.gif", "enemys6 plane", 'music/explode/Explode02.ogg', trailName, true, bulletType,100);
+        plan.call(this, 28, a, b, 90, 78, 80, 600, 1, "image/boom.gif", "enemys6 plane", 'music/explode/Explode02.ogg', trailName, true, bulletType,100);
     }
     function enemys7(a, b, trailName, bulletType) {
         this.extraimage = null;
-        plan.call(this, 24, a, b, 100, 100, 120, 600, 4, "image/boom.gif", "enemys7 plane", 'music/explode/Explode03.ogg', trailName, true, bulletType,50);
+        plan.call(this, 40, a, b, 100, 100, 120, 600, 4, "image/boom.gif", "enemys7 plane", 'music/explode/Explode03.ogg', trailName, true, bulletType,50);
         this.extraimages = function(){
             this.extraimage = document.createElement('div');
             this.extraimage.className = 'propeller circle';
@@ -561,41 +584,44 @@
             //小飞机
             enemys.push(new enemy4(random(0, bodyWidth-100), -100, 'default','missile'));
         }
-        if (mark === 1110) {
+        if (mark === 1310) {
             enemys.push(new enemy5( 0, bodyheight/2, 'circle-left-top', 'default'))
             enemys.push(new enemy5( bodyWidth, bodyheight/2, 'circle-right-top', 'default'))
         }
-         if (mark === 1140) {
+         if (mark === 1340) {
             enemys.push(new enemy5( 0, bodyheight/2, 'circle-left-top', 'default'))
             enemys.push(new enemy5( bodyWidth, bodyheight/2, 'circle-right-top', 'default'))
         }
-         if (mark === 1170) {
+         if (mark === 1370) {
             enemys.push(new enemy5( 0, bodyheight/2, 'circle-left-top', 'default'))
             enemys.push(new enemy5( bodyWidth, bodyheight/2, 'circle-right-top', 'default'))
         }
-         if (mark === 1200) {
+         if (mark === 1400) {
             enemys.push(new enemy5( 0, bodyheight/2, 'circle-left-top', 'default'))
             enemys.push(new enemy5( bodyWidth, bodyheight/2, 'circle-right-top', 'default'))
         }
-        if (mark === 1300) {
+        if (mark === 1500) {
             enemys.push(new enemys7( -50, 80, 'left-right2', 'missile'));
             enemys.push(new enemys7( bodyWidth, 80, 'right-left2', 'missile'));
         }
         if (mark === 1900) {
+            enemys.push(new enemy2(random(0,220), -100, 'default','default'));
+        }
+        if (mark === 2100) {
             //小飞机
             enemys.push(new enemy6(random(0, bodyWidth-300), -100, 'default','missile'));
         }
-        if (mark === 1950) {
+        if (mark === 2150) {
             enemys.push(new enemy6(random(bodyWidth-300, bodyWidth-200), -100, 'default', 'missile'))
         }
-        if (mark === 2000) {
+        if (mark === 2300) {
             enemys.push(new enemy6(random(bodyWidth-200, bodyWidth-100), -100, 'default', 'missile'))
         }
-        if (mark === 2400) {
+        if (mark === 2700) {
             enemys.push(new enemys7( -50, 150, 'left-right2', 'missile'));
             enemys.push(new enemys7( bodyWidth, 150, 'right-left2', 'missile'));
         }
-        if (mark === 2900) {
+        if (mark === 3100) {
             mark1 = 1;
             newboss1 = new boss1( -50, 50, 'boss-middle', 'bossbullet1')
             enemys.push(newboss1);
@@ -619,6 +645,11 @@
         if(newboss1 && mark1 % 216 === 0){
             newboss1.trailName = 'boss-middle' 
             newboss1.bulletType = 'bossbullet3'
+        }
+        if(newboss1 && newboss1.planehp<=0){
+            setTimeout(function(){
+              endGame('Success');  
+            },2000)
         }
         /*
         移动敌方飞机
@@ -665,13 +696,13 @@
                     }
                     if(enemys[i].underattack){
                         enemys[i].showattacktime += 20;
-                        if(enemys[i].showattacktime == 40){
+                        if(enemys[i].showattacktime == 320){
                             removeClass(enemys[i].imagenode, 'underattack')
                             enemys[i].underattack = false;
+                            enemys[i].showattacktime = 0;
                             enemys[i].hpbar.innerHTML = ''
                         }
-                        if (enemys[i].issuffercrit && enemys[i].showattacktime == 500) {
-                            enemys[i].showattacktime = 0;
+                        if (enemys[i].issuffercrit && enemys[i].showattacktime == 300) {
                             enemys[i].issuffercrit == false;
                             removeClass(enemys[i].imagenode, 'critdamage')
                             enemys[i].hpbar.innerHTML = ''
@@ -681,8 +712,8 @@
                 } else {
                     enemys[i].planedietimes += 20;
                     if (enemys[i].planedietimes == enemys[i].planedietime) {
-                        if(hasClass(enemys[i].imagenode,'enemys2')|| hasClass(enemys[i].imagenode,'enemys5')){
-                            var a =  randomInt(0,4)
+                        if(hasClass(enemys[i].imagenode,'enemys2')|| hasClass(enemys[i].imagenode,'enemys7')){
+                            var a =  randomInt(0,7)
                             switch(a){
                             case 0:
                                 supplybags.push(new supplybulletspeed(parseInt(enemys[i].imagenode.style.left),enemys[i].imagenode.offsetTop));
@@ -698,6 +729,15 @@
                                 break;
                             case 4:
                                 supplybags.push(new supplylaserbullets(parseInt(enemys[i].imagenode.style.left),enemys[i].imagenode.offsetTop));
+                                break;
+                            case 5:
+                                supplybags.push(new supplyattack(parseInt(enemys[i].imagenode.style.left),enemys[i].imagenode.offsetTop));
+                                break;
+                            case 6:
+                                supplybags.push(new supplycritRate(parseInt(enemys[i].imagenode.style.left),enemys[i].imagenode.offsetTop));
+                                break;
+                            case 7:
+                                supplybags.push(new supplyshotgun(parseInt(enemys[i].imagenode.style.left),enemys[i].imagenode.offsetTop));
                                 break;
                             }
                         }
@@ -723,6 +763,11 @@
                     break;
                 case 'laserbullets':
                     bullets.push(new laserbullet(parseInt(selfplane.imagenode.style.left) + (selfplane.sizeX/2) - 6, parseInt(selfplane.imagenode.style.top) - 12));
+                    break;
+                case 'shotgun':
+                    bullets.push(new shotgun(parseInt(selfplane.imagenode.style.left) + (selfplane.sizeX/2) -20, parseInt(selfplane.imagenode.style.top) - 12,-2));
+                    bullets.push(new shotgun(parseInt(selfplane.imagenode.style.left) + (selfplane.sizeX/2) - 10, parseInt(selfplane.imagenode.style.top) - 12,0));
+                    bullets.push(new shotgun(parseInt(selfplane.imagenode.style.left) + (selfplane.sizeX/2), parseInt(selfplane.imagenode.style.top) - 12,2));
                     break;
             }
         }
@@ -757,7 +802,7 @@
                 supplybags.splice(i, 1);
             }
             //当补给包被拾取，经过一段时间后清除补给包
-            if (supplybags[i].istaken === true) {
+            if (supplybags[i] && supplybags[i].istaken === true) {
                 supplybags[i].dietimes += 20;
                 if (supplybags[i].dietimes == supplybags[i].dietime) {
                     mainDiv.removeChild(supplybags[i].imagenode);
@@ -780,11 +825,14 @@
                     if (isCollide(bullets, enemys, i, j)) {
                         enemys[j].showattacktime = 0;
                         enemys[j].underattack = true;
-                        addClass(enemys[j].imagenode, 'underattack')
+                        if(!hasClass(enemys[j].imagenode,'underattack')){
+                            addClass(enemys[j].imagenode, ' underattack')
+                        }
                         //敌军生命 = 敌机血量 - 子弹攻击力 - （子弹暴击率*子弹暴击伤害*子弹攻击力）
-                        var isCrit = getRandom(bullets[i].critRate)
-                        var attack = bullets[i].bulletattck + isCrit * bullets[i].critDamage * bullets[i].bulletattck
-                        enemys[j].hpbar.innerHTML = attack
+                        var isCrit = getRandom(bullets[i].critRate + bulletCritExtra)
+                        // var attack = bullets[i].bulletattck + bulletAttackExtra + isCrit * bullets[i].critDamage * (bullets[i].bulletattck + bulletAttackExtra)
+                        var attack = (bullets[i].bulletattck + bulletAttackExtra) * (1 + isCrit * bullets[i].critDamage)
+                        enemys[j].hpbar.innerHTML = '-' + attack
                         // 暴击效果
                         if(isCrit){
                             enemys[j].issuffercrit = true
@@ -858,6 +906,15 @@
                     case 'laserbullets':
                         selfplane.bulletType = 'laserbullets';
                         break;
+                    case 'critRate':
+                        bulletCritExtra += 0.2;
+                        break;
+                    case 'attack':
+                        bulletAttackExtra++;
+                        break;
+                    case 'shotgun':
+                        selfplane.bulletType = 'shotgun';
+                        break;
                 }
                 supplybags[i].supplybagSound.play();
                 supplybags[i].imagenode.style.display = 'none';
@@ -866,34 +923,15 @@
         }
         
         if (selfplane.planehp <= 0) {
-            console.log(missedEnemys)
-            console.log(destroyedEnemys)
-            //游戏结束，统计分数
-            selfplane.boomimage.style.display = 'block';
-            selfplane.boomSound.play();
-            enddiv.style.display = "block";
-            planscore.innerHTML = scores;
-            if (!window.localStorage) {
-                console.log("浏览器不支持localstorage");
-                return false;
-            } else {
-                let oldScore = window.localStorage.getItem("highScore")
-                if (!oldScore || oldScore < scores) {
-                    window.localStorage.setItem("highScore", scores);
-                }
-            }
-            if (document.removeEventListener) {
-                mainDiv.removeEventListener("touchmove", yidong, true);
-                bodyobj.removeEventListener("touchmove", bianjie, true);
-            }
-            clearInterval(set);
+            endGame('Failed')
         }
     }
+
     // 碰撞检测条件(array1宽高比array2小)
     function isCollide(array1, array2, i, j) {
         //array1最右边大于array2最左边，array1最左边小于array2最右边
-        let leftside = false
-        let topside = false
+        var leftside = false
+        var topside = false
         if (array2 === 'selfplane') {
             leftside = (array1[j].imagenode.offsetLeft + array1[j].sizeX > selfplane.imagenode.offsetLeft) && (array1[j].imagenode.offsetLeft < selfplane.imagenode.offsetLeft + selfplane.sizeX)
             topside = (array1[j].imagenode.offsetTop <= selfplane.imagenode.offsetTop + selfplane.sizeY) && (array1[j].imagenode.offsetTop + array1[j].sizeY >= selfplane.imagenode.offsetTop)
@@ -922,26 +960,60 @@
         /*调用开始函数*/
         set = setInterval(start, 20);
     }
+    function endGame(missionstatus){
+        missionstatusLabel.innerHTML = missionstatus;
+        //游戏结束，统计分数
+        if(missionstatus == 'Failed'){
+           selfplane.boomimage.style.display = 'block';
+            selfplane.boomSound.play(); 
+        }
+        enddiv.style.display = "block";
+        planscore.innerHTML = scores;
+        if (document.removeEventListener) {
+            mainDiv.removeEventListener("touchmove", yidong, true);
+            bodyobj.removeEventListener("touchmove", bianjie, true);
+        }
+        clearInterval(set);
+    }
     //游戏结束后点击下一步按钮事件
     function next() {
         enddiv.style.display = "none";
         document.getElementById('gradingBox').style.display = 'block';
         document.getElementById('destroyedEnemys').innerHTML = destroyedEnemys.length;
         document.getElementById('missedEnemys').innerHTML = missedEnemys.length;
-        if(destroyedEnemys.length>25){
-          document.getElementById('grading').innerHTML = 'SSS';
+
+        if(destroyedEnemys.length>28){
+            document.getElementById('grading').innerHTML = 'SSS';
+            grade = 4;
         }
-        if(destroyedEnemys.length <= 25 && destroyedEnemys.length > 20){
+        if(destroyedEnemys.length <= 28 && destroyedEnemys.length > 23){
             document.getElementById('grading').innerHTML = 'AAA';
+            grade = 3;
         }
-        if(destroyedEnemys.length <= 20 && destroyedEnemys.length > 15){
+        if(destroyedEnemys.length <= 23 && destroyedEnemys.length > 18){
             document.getElementById('grading').innerHTML = 'BBB';
+            grade = 2;
         }
-        if(destroyedEnemys.length <= 15 && destroyedEnemys.length > 10){
+        if(destroyedEnemys.length <= 18 && destroyedEnemys.length > 13){
             document.getElementById('grading').innerHTML = 'CCC';
+            grade = 1;
         }
-        if(destroyedEnemys.length <= 10){
+        if(destroyedEnemys.length <= 13){
             document.getElementById('grading').innerHTML = 'DDD';
+            grade = 0;
+        }
+        if (!window.localStorage) {
+            console.log("浏览器不支持localstorage");
+            return false;
+        } else {
+            var oldScore = window.localStorage.getItem("highScore")
+            if (!oldScore || oldScore < scores) {
+                window.localStorage.setItem("highScore", scores);
+            }
+            var oldGrade = window.localStorage.getItem("highgrade")
+            if (!oldGrade || oldGrade < grade) {
+                window.localStorage.setItem("highgrade", grade);
+            }
         }
     }
     //游戏结束后点击结束按钮事件
