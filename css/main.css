@@ -39,6 +39,13 @@ body,html{
     color: #fff;
     font-size: 16px;
 }
+.copyright{
+    width: 100%;
+    position: absolute;
+    text-align: center;
+    color: #fff;
+    bottom: 10px
+}
 .btn-box{
     display: none;
 }
