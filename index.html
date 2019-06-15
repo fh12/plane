@@ -6,7 +6,6 @@
     <title>纯js实现的飞机大战HTML5小游戏代码</title>
     <link rel="stylesheet" type="text/css" href="css/main.css"/>
 </head>
-
 <body>
 <audio src="music/bg.mp3" loop="true" autoplay="autoplay"></audio>
 <div id="contentdiv">
@@ -33,13 +32,26 @@
             <button>重新开始</button><br/>
             <button>回到主页</button>
         </div>
-        <div id="enddiv">
+        <div id="enddiv" class="enddiv">
             <p class="plantext">SCORE</p>
             <p id="planscore">0</p>
-            <div><button onclick="end()">结束</button></div>
+            <div><button class="endbtn" onclick="next()">下一步</button></div>
         </div>
-        <div id="grading" class="grading">
-            
+        <div id="gradingBox" class="grading-box">
+            <p class="missionstatus">Mission <span id="missionstatus">success</span></p>
+            <p class="f12">您的评分：</p>
+            <div id="grading" class="grading">SSS</div>
+            <div class="detail f12">
+                <div class="item">
+                   <p>摧毁敌军飞机</p>
+                   <p><span id="destroyedEnemys" class="num">50</span>架</p>
+                </div>
+                <div class="item">
+                    <p>未击中敌军飞机</p>
+                   <p><span id="missedEnemys" class="num">12</span>架</p>
+                </div>
+            </div>
+            <div class="tac"><button class="endbtn" onclick="end()">结束</button></div>
         </div>
     </div>
 </div>

@@ -18,8 +18,6 @@
     var scores = 0;
     // 我军飞机生命值
     var life = document.getElementById("life");
-    // // 我军发射子弹默认频率
-    // var bulletFrequency = 15;
     // 我军发射子弹速度值
     var bulletSpeed = 4;
     // 我军发射子弹速度加成
@@ -53,9 +51,7 @@
         this.planboomimage = boomimage;
         // 是否被标记死亡
         this.planeisdie = false;
-        // 是否遭受暴击
-        this.issuffercrit = false;
-        this.showcrittime = 0;
+        
         this.planedietimes = 0;
         this.planedietime = dietime;
         this.speed = speed;
@@ -68,6 +64,11 @@
         this.bulletType = bulletType;
         // 发射子弹默认频率
         this.bulletFrequency = bulletFrequency
+        // 是否正在遭受攻击
+        this.underattack = false;
+        // 是否遭受暴击
+        this.issuffercrit = false;
+        this.showattacktime = 0;
         //行为
         /*
         移动行为
@@ -101,6 +102,17 @@
                 case 'right-left2':
                     if(this.imagenode.offsetLeft>3*bodyWidth/5){
                         this.imagenode.style.left = this.imagenode.offsetLeft - this.speed + 'px';
+                    }
+                    var q = getLocation(x1,x2,y1,y2);
+                    var a =  q.angle;
+                    this.imagenode.style.transform = 'rotate('+ a + 'deg)'
+                    break;
+                case 'boss-middle':
+                    if(this.imagenode.offsetLeft>bodyWidth/2 - this.planX/2){
+                        this.imagenode.style.left = this.imagenode.offsetLeft - this.speed + 'px';
+                    }
+                    if(this.imagenode.offsetLeft<bodyWidth/2 - this.planX/2){
+                        this.imagenode.style.left = this.imagenode.offsetLeft + this.speed + 'px';
                     }
                     var q = getLocation(x1,x2,y1,y2);
                     var a =  q.angle;
@@ -301,10 +313,10 @@
         bullet.call(this, X, Y, 30, 37, "bullet bullet2", 2, 'music/bullet/shot.mp3', 'friend', 0, 2, 0, 5, 'default');
     }
     function firebullet(X, Y) {
-        bullet.call(this, X, Y, 35, 72, "bullet firebullet", 3, 'music/bullet/firegun.mp3', 'friend', 0, 1, 0, 1, 'default');
+        bullet.call(this, X, Y, 35, 72, "bullet firebullet", 3, 'music/bullet/firegun.mp3', 'friend', 0.2, 1, 0, 1, 'default');
     }
     function laserbullet(X, Y) {
-        bullet.call(this, X, Y, 12, 40, "bullet laserbullet", 1, 'music/bullet/lasergun2.mp3', 'friend', 0.2, 2, 0, 7, 'default');
+        bullet.call(this, X, Y, 12, 40, "bullet laserbullet", 1, 'music/bullet/lasergun2.mp3', 'friend', 0.3, 2, 0, 7, 'default');
     }
 
     /*创建敌军子弹*/
@@ -318,23 +330,23 @@
         bullet.call(this, X, Y, 12, 38, "bullet e-missile", 1, 'music/bullet/lasergun2.mp3', 'enemy', 0, 1.2, 0, 8, 'missile');
     }
     function bossbullet1(X, Y, sppedX) {
-        bullet.call(this, X, Y, 20, 19, "bullet e-b1", 1, 'music/bullet/lasergun2.mp3', 'enemy', 0, 1.2, sppedX, 4, 'default');
+        bullet.call(this, X, Y, 20, 19, "bullet e-b1", 1, 'music/bullet/lasergun2.mp3', 'enemy', 0, 1.2, sppedX, 3, 'default');
     }
     function bossbullet2(X, Y, sppedX) {
         bullet.call(this, X, Y, 15, 49, "bullet e-b2", 1, 'music/bullet/assaultgun.mp3', 'enemy', 0, 1.2, sppedX, 6, 'missile');
+    }
+    function bossbullet3(X, Y, sppedX) {
+        bullet.call(this, X, Y, 35, 124, "bullet e-b3", 1, 'music/bullet/firegun.mp3', 'enemy', 0, 1.2, sppedX, 10, 'default');
     }
 
     /*
     创建敌机类
      */
-    // function enemy(hp, a, b, sizeX, sizeY, score, dietime, speed, boomimage, imgClass, soundSrc, trailName, hasfire, bulletType) {
-    //     plan.call(this, hp, random(a, b), -100, sizeX, sizeY, score, dietime, speed, boomimage, imgClass, soundSrc, trailName, hasfire, bulletType);
-    // }
     function enemy1(a, b, trailName, bulletType) {
-        plan.call(this, 3, a, b, 50, 34, 10, 600, 4, "image/boom.gif", "enemys1 plane", 'music/explode/Explode02.ogg', trailName, true, bulletType,150);
+        plan.call(this, 3, a, b, 50, 34, 10, 600, 2, "image/boom.gif", "enemys1 plane", 'music/explode/Explode02.ogg', trailName, true, bulletType,150);
     }
     function enemy2(a, b, trailName, bulletType) {
-        plan.call(this, 6, a, b, 70, 60, 30, 600, random(1,3), "image/boom.gif", "enemys2 plane", 'music/explode/Explode01.ogg', trailName, true, bulletType,150);
+        plan.call(this, 16, a, b, 70, 60, 30, 600, 1, "image/boom.gif", "enemys2 plane", 'music/explode/Explode01.ogg', trailName, true, bulletType,40);
     }
     function enemy3(a, b, trailName, bulletType) {
         plan.call(this, 10, a, b, 84, 54, 40, 600, random(1,3), "image/boom.gif", "enemys3 plane", 'music/explode/Explode01.ogg', trailName, true, bulletType,100);
@@ -343,7 +355,7 @@
         plan.call(this, 12, a, b, 100, 65, 50, 600, random(1,2), "image/boom.gif", "enemys4 plane", 'music/explode/Explode01.ogg', trailName, true, bulletType,100);
     }
     function enemy5(a, b, trailName, bulletType) {
-        plan.call(this, 3, a, b, 45, 37, 10, 600, 5, "image/boom.gif", "enemys5 plane", 'music/explode/Explode02.ogg', trailName, true, bulletType,120);
+        plan.call(this, 3, a, b, 45, 37, 10, 600, 7, "image/boom.gif", "enemys5 plane", 'music/explode/Explode02.ogg', trailName, true, bulletType,120);
     }
     function enemy6(a, b, trailName, bulletType) {
         plan.call(this, 16, a, b, 90, 78, 80, 600, 1, "image/boom.gif", "enemys6 plane", 'music/explode/Explode02.ogg', trailName, true, bulletType,100);
@@ -360,7 +372,7 @@
     }
     function boss1(a, b, trailName, bulletType) {
         this.extraimage = null;
-        plan.call(this, 200, a, b, 150, 132, 500, 1000, 2, "image/boom.gif", "boss1 plane", 'music/explode/Explode03.ogg', trailName, true, bulletType,40);
+        plan.call(this, 250, a, b, 150, 132, 500, 1000, 1, "image/boom.gif", "boss1 plane", 'music/explode/Explode03.ogg', trailName, true, bulletType,40);
         
     }
     
@@ -461,10 +473,10 @@
     var supplybags = [];
 
     //进程标志位
-    var mark = 0;
+    var mark = 1;
 
     // 子进程标志位
-    var mark1 = 0;
+    var mark1 = 1;
 
     // 背景图起始位置
     var m = 0;
@@ -487,120 +499,126 @@
         }
         // 总进程标志位++
         mark++;
-        
+        mark1++;
         /*
         创建敌方飞机和补给包
          */
         if (mark === 100) {
             //小飞机
-            enemys.push(new enemy3(random(0,bodyWidth-100), -100, 'default','autotrack'));
+            enemys.push(new enemy3(0, -100, 'curve','autotrack'));
         }
         if (mark === 200) {
             //小飞机
-            enemys.push(new enemy1(-50, 50, 'left-right1','default'));
+            enemys.push(new enemy1(-50, 150, 'left-right1','default'));
         }
         if (mark === 240) {
             //小飞机
-            enemys.push(new enemy1(-50, 50, 'left-right1','default'));
+            enemys.push(new enemy1(-50, 150, 'left-right1','default'));
         }
         if (mark === 280) {
             //小飞机
-            enemys.push(new enemy1(-50, 50, 'left-right1','default'));
+            enemys.push(new enemy1(-50, 150, 'left-right1','default'));
         }
-        if (mark === 320) {
-            //小飞机
-            enemys.push(new enemy1(-50, 50, 'left-right1','default'));
+        if(mark === 320){
+            enemys.push(new enemy2(random(0,200), -100, 'default','default'));
         }
-        if (mark === 500) {
-           enemys.push(new enemy5( 0, bodyheight/2, 'circle-left-top', 'default'))
-        }
-        if (mark === 510) {
-           enemys.push(new enemy5( 0, bodyheight/2, 'circle-left-top', 'default'))
+        if(mark === 420){
+            enemys.push(new enemy2(random(0,200), -100, 'default','default'));
         }
         if (mark === 520) {
+            //小飞机
+            enemys.push(new enemy1(-50, 150, 'left-right1','default'));
+        }
+        if (mark === 600) {
            enemys.push(new enemy5( 0, bodyheight/2, 'circle-left-top', 'default'))
         }
-        if (mark === 530) {
+        if (mark === 610) {
            enemys.push(new enemy5( 0, bodyheight/2, 'circle-left-top', 'default'))
         }
-        if (mark === 640) {
+        if (mark === 620) {
+           enemys.push(new enemy5( 0, bodyheight/2, 'circle-left-top', 'default'))
+        }
+        if (mark === 630) {
+           enemys.push(new enemy5( 0, bodyheight/2, 'circle-left-top', 'default'))
+        }
+        if (mark === 740) {
            enemys.push(new enemy5( bodyWidth, bodyheight/2, 'circle-right-top', 'default'))
         }
-        if (mark === 650) {
+        if (mark === 750) {
            enemys.push(new enemy5( bodyWidth, bodyheight/2, 'circle-right-top', 'default'))
         }
-        if (mark === 660) {
+        if (mark === 860) {
            enemys.push(new enemy5( bodyWidth, bodyheight/2, 'circle-right-top', 'default'))
         }
-        if (mark === 670) {
+        if (mark === 870) {
            enemys.push(new enemy5( bodyWidth, bodyheight/2, 'circle-right-top', 'default'))
         }
-        if (mark === 700) {
+        if (mark === 900) {
             //小飞机
             enemys.push(new enemy4(random(0, bodyWidth-100), -100, 'default','missile'));
         }
-        if (mark === 800) {
+        if (mark === 1000) {
             //小飞机
             enemys.push(new enemy4(random(0, bodyWidth-100), -100, 'default','missile'));
         }
-        if (mark === 1010) {
+        if (mark === 1110) {
             enemys.push(new enemy5( 0, bodyheight/2, 'circle-left-top', 'default'))
             enemys.push(new enemy5( bodyWidth, bodyheight/2, 'circle-right-top', 'default'))
         }
-         if (mark === 1040) {
+         if (mark === 1140) {
             enemys.push(new enemy5( 0, bodyheight/2, 'circle-left-top', 'default'))
             enemys.push(new enemy5( bodyWidth, bodyheight/2, 'circle-right-top', 'default'))
         }
-         if (mark === 1070) {
+         if (mark === 1170) {
             enemys.push(new enemy5( 0, bodyheight/2, 'circle-left-top', 'default'))
             enemys.push(new enemy5( bodyWidth, bodyheight/2, 'circle-right-top', 'default'))
         }
-         if (mark === 1100) {
+         if (mark === 1200) {
             enemys.push(new enemy5( 0, bodyheight/2, 'circle-left-top', 'default'))
             enemys.push(new enemy5( bodyWidth, bodyheight/2, 'circle-right-top', 'default'))
         }
-        if (mark === 1200) {
+        if (mark === 1300) {
             enemys.push(new enemys7( -50, 80, 'left-right2', 'missile'));
             enemys.push(new enemys7( bodyWidth, 80, 'right-left2', 'missile'));
         }
-        if (mark === 1800) {
+        if (mark === 1900) {
             //小飞机
             enemys.push(new enemy6(random(0, bodyWidth-300), -100, 'default','missile'));
         }
-        if (mark === 1850) {
+        if (mark === 1950) {
             enemys.push(new enemy6(random(bodyWidth-300, bodyWidth-200), -100, 'default', 'missile'))
         }
-        if (mark === 1900) {
+        if (mark === 2000) {
             enemys.push(new enemy6(random(bodyWidth-200, bodyWidth-100), -100, 'default', 'missile'))
         }
-        if (mark === 2300) {
+        if (mark === 2400) {
             enemys.push(new enemys7( -50, 150, 'left-right2', 'missile'));
             enemys.push(new enemys7( bodyWidth, 150, 'right-left2', 'missile'));
         }
-        if (mark === 3000) {
-            newboss1 = new boss1( -50, 50, 'left-right2', 'bossbullet1')
+        if (mark === 2900) {
+            mark1 = 1;
+            newboss1 = new boss1( -50, 50, 'boss-middle', 'bossbullet1')
             enemys.push(newboss1);
         }
-        if (mark === 3300) {
-            newboss1.trailName = 'boss-left'
+        if(newboss1 && mark1 % 122 === 0 ){
+            if(newboss1 && newboss1.imagenode.offsetLeft>0){
+                newboss1.trailName = 'boss-left'
+            }else{
+                newboss1.trailName = 'boss-right'
+            }
+            newboss1.bulletType = 'bossbullet1'
         }
-        if (mark === 3400) {
-            newboss1.trailName = 'boss-right'
-        }
-        if (mark === 3500) {
-            newboss1.trailName = 'boss-left'
-        }
-        if (mark === 3600) {
-            newboss1.trailName = 'boss-right'
-        }
-        if (mark === 3700) {
-            newboss1.trailName = 'boss-left'
-        }
-        if (mark === 3800) {
-            newboss1.trailName = 'left-right2'
-        }
-        if (mark === 4000) {
+        if(newboss1 && mark1 % 172 === 0){
+            if(newboss1.imagenode.offsetLeft>0){
+                newboss1.trailName = 'boss-left'
+            }else{
+                newboss1.trailName = 'boss-right'
+            }
             newboss1.bulletType = 'bossbullet2'
+        }
+        if(newboss1 && mark1 % 216 === 0){
+            newboss1.trailName = 'boss-middle' 
+            newboss1.bulletType = 'bossbullet3'
         }
         /*
         移动敌方飞机
@@ -639,20 +657,31 @@
                                 enemybullets.push(new bossbullet2(parseInt(enemys[i].imagenode.style.left) + enemys[i].sizeX/2, parseInt(enemys[i].imagenode.style.top) + 20,0));
                                 enemybullets.push(new bossbullet2(parseInt(enemys[i].imagenode.style.left) + enemys[i].sizeX, parseInt(enemys[i].imagenode.style.top) + 10,0));
                                 break;
+                            case 'bossbullet3':
+                                enemybullets.push(new bossbullet3(parseInt(enemys[i].imagenode.style.left), parseInt(enemys[i].imagenode.style.top) + 20,0));
+                                enemybullets.push(new bossbullet3(parseInt(enemys[i].imagenode.style.left) + enemys[i].sizeX, parseInt(enemys[i].imagenode.style.top) + 20,0));
+                                break;
                         }
                     }
-                    if(enemys[i].issuffercrit){
-                        enemys[i].showcrittime += 20;
-                        if (enemys[i].showcrittime == enemys[i].planedietime) {
-                            enemys[i].issuffercrit == false
+                    if(enemys[i].underattack){
+                        enemys[i].showattacktime += 20;
+                        if(enemys[i].showattacktime == 40){
+                            removeClass(enemys[i].imagenode, 'underattack')
+                            enemys[i].underattack = false;
+                            enemys[i].hpbar.innerHTML = ''
+                        }
+                        if (enemys[i].issuffercrit && enemys[i].showattacktime == 500) {
+                            enemys[i].showattacktime = 0;
+                            enemys[i].issuffercrit == false;
                             removeClass(enemys[i].imagenode, 'critdamage')
                             enemys[i].hpbar.innerHTML = ''
                         }
                     }
+                    
                 } else {
                     enemys[i].planedietimes += 20;
                     if (enemys[i].planedietimes == enemys[i].planedietime) {
-                        if(enemys[i].imagenode.className === 'enemys5 plane'){
+                        if(hasClass(enemys[i].imagenode,'enemys2')|| hasClass(enemys[i].imagenode,'enemys5')){
                             var a =  randomInt(0,4)
                             switch(a){
                             case 0:
@@ -749,13 +778,17 @@
                     }
                     //判断我方子弹与敌机碰撞
                     if (isCollide(bullets, enemys, i, j)) {
+                        enemys[j].showattacktime = 0;
+                        enemys[j].underattack = true;
+                        addClass(enemys[j].imagenode, 'underattack')
                         //敌军生命 = 敌机血量 - 子弹攻击力 - （子弹暴击率*子弹暴击伤害*子弹攻击力）
                         var isCrit = getRandom(bullets[i].critRate)
                         var attack = bullets[i].bulletattck + isCrit * bullets[i].critDamage * bullets[i].bulletattck
+                        enemys[j].hpbar.innerHTML = attack
                         // 暴击效果
                         if(isCrit){
                             enemys[j].issuffercrit = true
-                            enemys[j].hpbar.innerHTML = attack
+                            removeClass(enemys[j].imagenode, 'underattack')
                             addClass(enemys[j].imagenode, 'critdamage')
                         }
                         enemys[j].planehp = enemys[j].planehp - attack;
@@ -888,6 +921,28 @@
         scorediv.style.display = "block";
         /*调用开始函数*/
         set = setInterval(start, 20);
+    }
+    //游戏结束后点击下一步按钮事件
+    function next() {
+        enddiv.style.display = "none";
+        document.getElementById('gradingBox').style.display = 'block';
+        document.getElementById('destroyedEnemys').innerHTML = destroyedEnemys.length;
+        document.getElementById('missedEnemys').innerHTML = missedEnemys.length;
+        if(destroyedEnemys.length>25){
+          document.getElementById('grading').innerHTML = 'SSS';
+        }
+        if(destroyedEnemys.length <= 25 && destroyedEnemys.length > 20){
+            document.getElementById('grading').innerHTML = 'AAA';
+        }
+        if(destroyedEnemys.length <= 20 && destroyedEnemys.length > 15){
+            document.getElementById('grading').innerHTML = 'BBB';
+        }
+        if(destroyedEnemys.length <= 15 && destroyedEnemys.length > 10){
+            document.getElementById('grading').innerHTML = 'CCC';
+        }
+        if(destroyedEnemys.length <= 10){
+            document.getElementById('grading').innerHTML = 'DDD';
+        }
     }
     //游戏结束后点击结束按钮事件
     function end() {
