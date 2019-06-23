@@ -1,5 +1,7 @@
 # plane
 a html5 game write by javascript 原生javascript飞机射击游戏
+
+游戏demo演示： http://47.104.87.133/game/
 本游戏支持在移动端设备浏览器打开。
 电脑端游戏，可以打开F12，调至移动端设备进行游戏。
 游戏简介：
